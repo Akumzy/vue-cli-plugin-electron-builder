@@ -1,7 +1,6 @@
 const fs = require('fs')
 const semver = require('semver')
 const { warn } = require('@vue/cli-shared-utils')
-
 module.exports = (api, options = {}) => {
   if (!options.electronBuilder) options.electronBuilder = {}
   const electronVersion = options.electronBuilder.electronVersion
@@ -9,8 +8,7 @@ module.exports = (api, options = {}) => {
   pkg = JSON.parse(pkg)
   const usesTS = api.hasPlugin('typescript')
   const hasBackground =
-    fs.existsSync(api.resolve(`./src/background.ts`)) ||
-    fs.existsSync(api.resolve(`./src/background.js`))
+    fs.existsSync(api.resolve(`./src/background.ts`)) || fs.existsSync(api.resolve(`./src/background.js`))
 
   const devtoolsExtensionsBroken = semver.gte(
     (electronVersion || pkg.devDependencies.electron).replace('^', ''),
@@ -18,9 +16,7 @@ module.exports = (api, options = {}) => {
   )
   if (devtoolsExtensionsBroken) {
     warn('Devtools extensions are broken in Electron 6.0.0 and greater')
-    warn(
-      'Vue Devtools have been disabled, see the comments in your background file for more info'
-    )
+    warn('Vue Devtools have been disabled, see the comments in your background file for more info')
   }
   if (!hasBackground) {
     // If user does not have a background file it should be created
@@ -67,10 +63,7 @@ module.exports = (api, options = {}) => {
         /process\.env\.WEBPACK_DEV_SERVER_URL\s*?\)$/m,
         'process.env.WEBPACK_DEV_SERVER_URL as string)'
       )
-      background = background.replace(
-        /let win\s*?$/m,
-        'let win: BrowserWindow | null'
-      )
+      background = background.replace(/let win\s*?$/m, 'let win: BrowserWindow | null')
       fs.writeFileSync(api.resolve('./src/background.ts'), background)
       if (api.hasPlugin('router')) {
         console.log('\n')
